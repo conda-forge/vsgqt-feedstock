@@ -1,14 +1,17 @@
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.16)
 
-project(vsgqtviewer)
+project(vsgqt_consumer LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
+find_package(vsg CONFIG REQUIRED)
 find_package(vsgQt CONFIG REQUIRED)
-find_package(vsgXchange CONFIG REQUIRED)
 
-add_executable(vsgqtviewer main.cpp)
-target_link_libraries(vsgqtviewer PRIVATE vsgQt::vsgQt vsgXchange::vsgXchange)
+add_executable(vsgqt_consumer main.cpp)
+target_link_libraries(vsgqt_consumer PRIVATE Qt5::Widgets vsgQt::vsgQt)
+
+enable_testing()
+add_test(NAME vsgqt_consumer COMMAND vsgqt_consumer)

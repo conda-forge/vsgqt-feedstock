@@ -39,10 +39,16 @@ test:
     - test -f $PREFIX/include/vsgQt/Export.h  # [not win]
     - test -f $PREFIX/lib/libvsgQt${SHLIB_EXT}  # [not win]
     - test -f $PREFIX/lib/cmake/vsgQt/vsgQtConfig.cmake  # [not win]
+    - cmake -S tests -B tests/build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$PREFIX  # [not win]
+    - cmake --build tests/build --config Release  # [not win]
+    - ctest --test-dir tests/build --output-on-failure  # [not win]
     - if not exist %PREFIX%\\Library\\include\\vsgQt\\Export.h exit 1  # [win]
     - if not exist %PREFIX%\\Library\\lib\\vsgQt.lib exit 1  # [win]
     - if not exist %PREFIX%\\Library\\bin\\vsgQt.dll exit 1  # [win]
     - if not exist %PREFIX%\\Library\\lib\\cmake\\vsgQt\\vsgQtConfig.cmake exit 1  # [win]
+    - cmake -S tests -B tests\\build -DCMAKE_PREFIX_PATH=%LIBRARY_PREFIX%  # [win]
+    - cmake --build tests\\build --config Release  # [win]
+    - ctest --test-dir tests\\build --output-on-failure -C Release  # [win]
   requires:
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
@@ -50,6 +56,7 @@ test:
     - libgl-devel  # [linux]
     - ninja  # [not win]
     - pkgconfig  # [linux]
+    - {{ stdlib("c") }}
     - vsgXchange
   files:
     - tests/
