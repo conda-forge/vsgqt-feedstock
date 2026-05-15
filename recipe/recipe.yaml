@@ -1,0 +1,88 @@
+context:
+  name: vsgqt
+  version: "0.4.0"
+
+package:
+  name: ${{ name }}
+  version: ${{ version }}
+
+source:
+  url: https://github.com/vsg-dev/vsgQt/archive/v${{ version }}.tar.gz
+  sha256: 31756a513ec1e703296e5d256daaa0c8d49af7a1b605ff3fc9fbc902e5be1c8d
+
+build:
+  number: 1
+  script:
+    - if: win
+      then: call "%RECIPE_DIR%\\build.bat"
+    - if: unix
+      then: bash "${RECIPE_DIR}/build.sh"
+
+requirements:
+  build:
+    - ${{ compiler('cxx') }}
+    - ${{ stdlib('c') }}
+    - cmake
+    - if: not win
+      then: ninja
+    - if: linux
+      then: pkgconfig
+  host:
+    - if: linux
+      then: libgl-devel
+    - libvulkan-headers
+    - libvulkan-loader
+    - qt
+    - vulkanscenegraph >=1.1.15
+  run:
+    - qt-main
+  run_exports:
+    - ${{ pin_subpackage('vsgqt', upper_bound='x.x') }}
+  ignore_run_exports:
+    from_package:
+      - libgl-devel
+      - libvulkan-loader
+
+tests:
+  - requirements:
+      run:
+        - ${{ compiler('c') }}
+        - ${{ compiler('cxx') }}
+        - ${{ stdlib('c') }}
+        - cmake
+        - if: not win
+          then: ninja
+        - if: linux
+          then: libgl-devel
+        - if: linux
+          then: pkgconfig
+    files:
+      recipe:
+        - run_test.bat
+        - run_test.sh
+        - tests/
+    script:
+      - if: unix
+        then:
+          - test -f "${PREFIX}/include/vsgQt/Export.h"
+          - test -f "${PREFIX}/lib/libvsgQt${SHLIB_EXT}"
+          - test -f "${PREFIX}/lib/cmake/vsgQt/vsgQtConfig.cmake"
+          - bash run_test.sh
+      - if: win
+        then:
+          - if not exist "%PREFIX%\\Library\\include\\vsgQt\\Export.h" exit 1
+          - if not exist "%PREFIX%\\Library\\lib\\vsgQt.lib" exit 1
+          - if not exist "%PREFIX%\\Library\\bin\\vsgQt.dll" exit 1
+          - if not exist "%PREFIX%\\Library\\lib\\cmake\\vsgQt\\vsgQtConfig.cmake" exit 1
+          - call run_test.bat
+
+about:
+  homepage: https://vsg-dev.github.io/vsg-dev.io/
+  repository: https://github.com/vsg-dev/vsgQt
+  summary: Qt integration with VulkanSceneGraph
+  license: MIT
+  license_file: LICENSE.md
+
+extra:
+  recipe-maintainers:
+    - jeongseok-meta
