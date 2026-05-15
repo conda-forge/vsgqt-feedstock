@@ -33,11 +33,9 @@ requirements:
     - libvulkan-headers
     - libvulkan-loader
     - qt
-    - vsgxchange >=1.1.13
     - vulkanscenegraph >=1.1.15
   run:
     - qt-main
-    - vsgxchange >=1.1.13
   run_exports:
     - ${{ pin_subpackage('vsgqt', upper_bound='x.x') }}
   ignore_run_exports:
@@ -58,7 +56,6 @@ tests:
           then: libgl-devel
         - if: linux
           then: pkgconfig
-        - vsgxchange >=1.1.13
     files:
       recipe:
         - run_test.bat
