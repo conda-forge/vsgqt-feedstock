@@ -10,7 +10,5 @@ cxx_compiler:
 - vs2022
 qt:
 - '5.15'
-qt_main:
-- '5.15'
 target_platform:
 - win-64
