@@ -42,6 +42,7 @@ requirements:
     - ${{ pin_subpackage('vsgqt', upper_bound='x.x') }}
   ignore_run_exports:
     from_package:
+      - libgl-devel
       - libvulkan-loader
 
 tests:
