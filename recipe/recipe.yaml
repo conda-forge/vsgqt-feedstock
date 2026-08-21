@@ -1,6 +1,6 @@
 context:
   name: vsgqt
-  version: "0.4.0"
+  version: "0.5.0"
 
 package:
   name: ${{ name }}
@@ -8,10 +8,10 @@ package:
 
 source:
   url: https://github.com/vsg-dev/vsgQt/archive/v${{ version }}.tar.gz
-  sha256: 31756a513ec1e703296e5d256daaa0c8d49af7a1b605ff3fc9fbc902e5be1c8d
+  sha256: be7783e8cd5841bdfadbb1fbb5b801094b5f17d600d78f4eed48610cd89f2663
 
 build:
-  number: 1
+  number: 0
   script:
     - if: win
       then: call "%RECIPE_DIR%\\build.bat"
@@ -53,9 +53,9 @@ tests:
         - if: not win
           then: ninja
         - if: linux
-          then: libgl-devel
-        - if: linux
-          then: pkgconfig
+          then:
+            - libgl-devel
+            - pkgconfig
     files:
       recipe:
         - run_test.bat
